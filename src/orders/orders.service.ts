@@ -28,7 +28,7 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
       }),
       meta: {
         page: page ?? 1,
-        limit: limit ?? 10,
+        perPage: limit ?? 10,
         totalItems,
         lastPage,
       },
