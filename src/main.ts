@@ -23,6 +23,7 @@ async function bootstrap() {
     }),
   );
 
+  await app.listen();
   logger.log(`Microservices runningon port ${envs.port}`);
 }
 void bootstrap();
