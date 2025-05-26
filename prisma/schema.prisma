@@ -21,28 +21,24 @@ enum order_status {
   CANCELLED
 }
 
-model Order{
-  id String @id @default(uuid())
+model Order {
+  id           String       @id @default(uuid())
   total_amaunt Float
-  total_items Int
-  status order_status @default(PENDING)
-  paid Boolean @default(false)
-  paid_at DateTime?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  //! Investigar como funcionan estas relaciones 
-  //  paidOrders PaidOrders[]
+  total_items  Int
+  status       order_status @default(PENDING)
+  paid         Boolean      @default(false)
+  paid_at      DateTime?
+  created_at   DateTime     @default(now())
+  updated_at   DateTime     @updatedAt
+  order_items  OrderItem[]
 }
 
-/**
-  *! This model is used to track the paid orders
-  * model PaidOrders{
-    * id String @id @default(uuid())
-    * order_id String
-    * order Order @relation(fields: [order_id], references: [id])
-    * paid_at DateTime @default(now())
-    * created_at DateTime @default(now())
-    * updated_at DateTime @updatedAt
-  * }
-*/
+model OrderItem {
+  id         String @id @default(uuid())
+  product_id Int
+  quantity   Int
+  price      Float
+
+  Order   Order?  @relation(fields: [orderId], references: [id])
+  orderId String?
+}
