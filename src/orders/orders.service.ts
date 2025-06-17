@@ -9,9 +9,7 @@ import { NATS_SERVICE } from 'src/config';
 
 @Injectable()
 export class OrdersService extends PrismaClient implements OnModuleInit {
-  constructor(
-    @Inject(NATS_SERVICE) private readonly productsService: ClientProxy,
-  ) {
+  constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {
     super();
   }
 
@@ -24,7 +22,7 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
       // * 1.- Validacion de los productos
       const ids = createOrderDto.items.map((item) => item.product_id);
       const products: ProductItem[] = await firstValueFrom(
-        this.productsService.send({ cmd: 'validate_products' }, ids),
+        this.client.send({ cmd: 'validate_products' }, ids),
       );
 
       //* 2.- Calculo delos valores necesarios para la orden
@@ -130,7 +128,7 @@ export class OrdersService extends PrismaClient implements OnModuleInit {
     //* 2.- Valida que la orden exista y obtiene los nombres de los productos
     const ids = order?.order_items.map((item) => item.product_id);
     const products: ProductItem[] = await firstValueFrom(
-      this.productsService.send({ cmd: 'validate_products' }, ids),
+      this.client.send({ cmd: 'validate_products' }, ids),
     );
     if (!order)
       throw new RpcException({
